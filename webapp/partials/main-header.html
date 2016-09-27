@@ -1,0 +1,56 @@
+<nav id='main-header' class="navbar  navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header ">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"/>
+				<span class="icon-bar"/>
+				<span class="icon-bar"/>
+			</button>
+			<a class="navbar-brand" href="http://www.smartdatanet.it/" target='_blank' style=''>
+				Big Data Explorer
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<!-- <ul class="nav navbar-nav">
+				<li>
+					<a href="http://www.smartdatanet.it/yuccadashboard/dashboard.html">Yucca Dashboard</a>
+				</li>
+				<li  ng-class="{active:currentSection()=='install'}">
+					<a href="#/install" translate>getting_started</a>
+				</li>
+				<li ng-class="{active:currentSection()=='widget'}"  class="dropdown" uib-dropdown keyboard-nav>
+         			<a href="#/widget" class="dropdown-toggle" uib-dropdown-toggle>Widget <span class="caret"></span></a>
+			        <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="simple-btn-keyboard-nav">
+			        	<li><a href="#/widget#top">Intro</a></li>
+		   				<li role="presentation" class="divider"></li>
+			        	<li ng-repeat="widget in widgetsForMenu" class='widget-mainmenu-item'>
+			        		<a href="#/widget#{{widget.key}}">
+			        			{{widget.name|translate}}
+			        			<i  ng-repeat='feature in widget.features track by $index'  class="widget-feature-menu-icon" ng-class='featureStyle(feature)' aria-hidden="true" title={{feature}}></i>
+			        		</a>
+			        	</li>
+			        </ul>
+			    </li>
+			</ul>-->
+			<ul class="nav navbar-nav navbar-right navbar-flags ">
+				<li>
+					<a href ng-click="changeLanguage('it')" title="{{'MENU_LANG_IT'|translate}}" class="menu-flag-icon menu-flag-icon-it">
+						<img src='images/flags/it.png' />
+					</a>
+				</li>
+				<li>
+					<a href ng-click="changeLanguage('en')" title="{{'MENU_LANG_EN'|translate}}" class="menu-flag-icon menu-flag-icon-en">
+						<img src='images/flags/en.png' />
+					</a>
+				</li>
+				<li>
+					<p class="navbar-text">&nbsp;</p>
+				</li>
+			</ul>
+		</div>
+	</div>
+</nav>
+

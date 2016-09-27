@@ -1,0 +1,31 @@
+/* app css stylesheet */
+@import 'https://fonts.googleapis.com/css?family=Courgette|Hind+Siliguri';
+
+body{font-family: 'Hind Siliguri', sans-serif;}
+#main-header{border-radius: 0px; box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22); margin-bottom: 0; }
+#main-header .navbar-brand{font-family: 'Courgette', cursive;  font-size: 28px; color: #fff;}
+
+#main-header  .nav>li { font-weight: normal; font-size: 18px; }   
+#main-header.navbar-inverse {background-color: #3071a9; border-color: #3071a9; color: white;}
+#main-header.navbar-inverse  a{color: white;}
+#main-header.navbar-inverse #main-header.navbar-collapse, #main-header.navbar-inverse #main-header.navbar-form {border-color: #3071a9;} 
+#main-header.navbar-nav>.active>a, #main-header.navbar-nav>.active>a:focus, #main-header.navbar-nav>.active>a:hover {background-color: #3071a9; color: white;}
+#main-header .navbar-nav{}
+
+#main-header .navbar-flags {}
+#main-header .navbar-flags img{height: 18px;}
+
+#main-footer { background-color: #3071a9; color: #fff; padding-top: 12px; margin-top: 12px;}
+#main-footer p { margin-bottom: 12px; text-align: left;}
+#main-footer ul li { list-style: none; text-align: right; padding: 10px 0; display: block;}
+#main-footer ul li + li::before  { content: ""; padding: 0; }
+#main-footer ul li a{text-decoration: none;color: #fff;}
+#main-footer ul li a:hover {text-decoration: underline;}
+#main-footer .logo-csi { background-attachment: scroll; background-clip: border-box; background-color: transparent; background-image: url(/images/logo_csipiemonte_footer.png);
+ background-origin: padding-box; background-position: center center; background-repeat: no-repeat; background-size: auto auto;display: inline-block; height: 51px; width: 164px;}
+ 
+ .main-container{padding-top: 80px; min-height: 450px;}
+ 
+.form-inline .form-group{padding-left: 1em;}
+
+input.ng-dirty.ng-invalid, input.ng-submitted.ng-invalid{border-color: red;}
