@@ -1,0 +1,41 @@
+.alert-main {position: fixed;z-index: 10; left: 0; top: 0; width: 100%; height: 100%;  overflow: auto;
+  background-color: rgb(0,0,0);  background-color: rgba(0,0,0,0.6); padding: 10% 30%; border-width: 0;}
+.alert-main .panel-body{padding: 10px; background-color: #fff;}
+
+.modal-panel{position: fixed;z-index: 10; left: 0; top: 0; width: 100%; height: 100%;  overflow: auto;
+  background-color: rgb(0,0,0);  background-color: rgba(0,0,0,0.6); padding: 10%; border-width: 0;}
+.modal-panel .panel-body{padding: 10px; background-color: #fff;}
+
+
+.explorer-wrapper{padding-top: 3em;}
+.explorer-start-panel{padding: 64px 0; text-align: left; font-size: 32px; color: #ccc;letter-spacing: .01em; }
+.explorer-start-panel .btn{font-size: 48px; }
+.explorer-start-panel .btn i{vertical-align:middle;}
+.explorer-start-intro a{color: #afcee9;}
+.explorer-start-intro code{color: #90bae0; background-color: #eff5fb;}
+.explorer-header-toolbar{padding: 1em 0; border-bottom: solid 1px #bbb; margin: 1em 0;}
+.explorer-header-toolbar .toolbar-panel, .explorer-header-toolbar .start-button{font-size: 1.6em;}
+.toolbar-panel a{padding-right: 2em;}
+
+/* folder */
+.folder-tree-panel{overflow: auto; max-height: 400px; border-right: solid 1px #bbb;}
+.folder-tree-list{list-style-type: none;}
+.folder-tree-list a{color: #2d2d2d; white-space: nowrap;}
+.folder-selected, .folder-selected .folder-icon{color: #bb8e02; font-weight: bold;}
+.item-icon{padding-right: .5em;}
+.folder-icon{color: #f8bd07;}
+.file-icon{color: #2d2d2d;}
+
+/* file */
+.file-view-panel{overflow: auto; max-height: 400px;}
+.file-view-panel td{white-space: nowrap;}
+.file-action-button{font-size: larger; padding-right: .5em;}
+.file-preview-body{overflow: auto; max-height: 350px;}
+
+.icon-xml{color: #aa00ff;}
+.icon-log{color: #6d8764;}
+.icon-txt{color: #647687;}
+.icon-csv{color: #60a917;}
+.icon-jar{color: #ff4141;}
+.icon-snappy{color: #ff9900;}
+.icon-sql{color: #19aeff}

@@ -15,6 +15,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             var password = attr.password;
             var startpath = attr.startpath;
             scope.pathToBrowse = [];
+            scope.copyPanel = {pathToCopy: null};
             
 //            scope.$watch("username",function(newValue,oldValue) {
 //                console.log("changed",newValue,oldValue);
@@ -34,27 +35,6 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
                 	"isOpen": true,
             	};
             	
-            	//createFolderItem(rootFolder);
-            
-            
-//            var createFolderItem = function(itemLoaded){
-//            	var item = {};
-//            	item.pathSuffix = itemLoaded.pathSuffix;
-//            	item.children = [];
-//            	item.fullpath = itemLoaded.fullpath + item.pathSuffix + "/" ;
-//            	console.log("item", item);
-//	    		item.loadChildren = function(){
-//	    			console.log("loadChildren");
-//	    			scope.selectNode(this.fullpath);
-//	    		};
-//	    		item.icon = item.type == "DIRECTORY"?"glyphicon glyphicon-folder-close":"glyphicon glyphicon-file";
-//            	item.isOpen = true;
-//	    		
-//            	
-//            	return item;
-//            	
-//            };
-            
             var refreshFileList = function(selectedNode){
             	scope.filemessage = null;
             	scope.filelist= [];
@@ -81,18 +61,36 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             };
             
             var scrollTo = function(parentId, elementId) {
-                var element = angular.element(document.querySelector( '#' + elementId));
-                console.log("element", elementId);
-                angular.element(document.querySelector( '#' + parentId ))[0].scrollTop = element.prop('offsetTop');
-                console.log("parent", angular.element(document.querySelector( '#' + parentId )));
+            	setTimeout(function() {
+            		var element = angular.element(document.querySelector( '#' + elementId));
+                    console.log("element", elementId);
+                    angular.element(document.querySelector( '#' + parentId ))[0].scrollTop = element.prop('offsetTop');
+                    console.log("parent", angular.element(document.querySelector( '#' + parentId )));
+            	}, 0);
+                
             };
             
           
-
+            var refreshFolderList = function(fromNode){
+            	fromNode.isOpen = !fromNode.isOpen;
+    	    	if(scope.pathToBrowse.length>0){
+    	    		fromNode.isOpen = true;
+    	    		var currentPath  = scope.pathToBrowse[0];
+    	    		scope.pathToBrowse.shift();
+    	    		scope.selectNode(findChildren(fromNode, currentPath));
+    	    	}
+    	    	else{
+    	    		scrollTo("folder-tree-panel", fromNode.viewId);
+                	scope.selectedFolderPath = fromNode.fullpath;
+                	console.info("scope.pathToBrowse ", scope.pathToBrowse);
+                	console.info("selectedFolderPath - ", scope.selectedFolderPath);
+    	    	}
+            };
             
             scope.selectNode = function(fromNode){
             	console.debug("fromNode", fromNode);
             	console.debug("fromPath", fromNode.fullpath);
+            	console.log("qui");
             	if(fromNode.children.length==0){
 	            	hdfsService.getPath(scope.username, password, fromNode.fullpath).then(function (response) {
 	        	    	console.log("response", response.data.FileStatuses.FileStatus);
@@ -101,7 +99,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
 	        	    		
 	        	    		var item = response.data.FileStatuses.FileStatus[i];
 	        	    		item.fullpath = fromNode.fullpath + item.pathSuffix;
-	        	    		item.viewId = fromNode.viewId + item.pathSuffix + "_";
+	        	    		item.viewId = fromNode.viewId + item.pathSuffix.replace(".","_") + "_";
 
 	        	    		if(item.type == 'DIRECTORY')
 	        	    			item.fullpath += "/" ;
@@ -110,35 +108,21 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
 	        	    		fromNode.children.push(item);
 	        	    	}
 	        	    	refreshFileList(fromNode);
-	        	    	if(scope.pathToBrowse.length>0){
-	        	    		var currentPath  = scope.pathToBrowse[0];
-	        	    		scope.pathToBrowse.shift();
-	        	    		scope.selectNode(findChildren(fromNode, currentPath));
-	        	    	}
-	        	    	else{
-	        	    		scrollTo("folder-tree-panel", fromNode.viewId);
-	        	    	}
-
+	        	    	refreshFolderList(fromNode);
 	        	
 	        	    }, function(response){
 	        	    	console.error("getPath response error", response);
 	        	    	scope.filelist= [];
 	        	    	scope.filemessage = {"type":"danger", "text":"<strong>" + response.status + "</strong> " + response.statusText};
+	        	    	refreshFolderList(fromNode);
 	        	    });
             	}
             	else{
             		refreshFileList(fromNode);
-        	    	if(scope.pathToBrowse.length>0){
-        	    		var currentPath  = scope.pathToBrowse[0];
-        	    		console.info("c", currentPath);
-        	    		scope.pathToBrowse.shift();
-        	    		scope.selectNode(findChildren(fromNode, currentPath));
-        	    		scrollTo("folder-tree-panel", fromNode.viewId);
-        	    	}
+        	    	refreshFolderList(fromNode);
+
             	}
     	    	
-            	fromNode.isOpen = !fromNode.isOpen;
-            	scope.selectedFolderPath = fromNode.fullpath;
             	
             };
             
@@ -168,46 +152,21 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
     	    }, function(response){
     	    	console.error("browseToHome response error", response);
     	    });
-        };
+          };
+          
+          scope.browseToPath = function(path){
+        	  scope.pathToBrowse = path.split("/");
+	    	  scope.pathToBrowse.shift();
+	    	  if(scope.pathToBrowse[scope.pathToBrowse.length - 1] == "")
+	    		  scope.pathToBrowse.pop();
+
+	    	  scope.showFavoritePanel = false;
+	    	  scope.selectNode(scope.filetree);
+	    	  
+          };
 
             
-            
-            //            scope.browseToHome = function(){
-//            	hdfsService.getHomeDirectory(scope.username, password).then(function (response) {
-//        	    	console.log("response", response);
-//        	    	if(response!=null && response.data !=null && response.data.Path !=null){
-//        	    		var folders = response.data.Path.split("/");
-//        	    		var parentNode = scope.filetree;
-//        	    		for (var i = 0; i < folders.length; i++) {
-//        	    			console.log("folders", folders[i]);
-//        	    			if(folders[i] != ""){
-//	        	    			var childNode = findChildren(parentNode, folders[i]);
-//	        	    			console.log("childNode",childNode);
-//	        	    			parentNode = childNode;
-//        	    			}
-//            	    		//scope.selectNode(scope.filetree);
-//						}
-//        	    	}
-//        	    }, function(response){
-//        	    	console.error("browseToHome response error", response);
-//        	    });
-//            };
-//            
-//            scope.browseToNode = function(parentNode, path){
-//        	    			if(folders[i] != ""){
-//	        	    			var childNode = findChildren(parentNode, folders[i]);
-//	        	    			console.log("childNode",childNode);
-//	        	    			parentNode = childNode;
-//        	    			}
-//            	    		//scope.selectNode(scope.filetree);
-//						}
-//        	    	}
-//        	    }, function(response){
-//        	    	console.error("browseToHome response error", response);
-//        	    });
-//            };
-//            
-            
+  
             scope.start = function(){
             	if(scope.username!=null && scope.username!=""){
             		scope.selectNode(scope.filetree);
@@ -219,6 +178,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             };
             
             scope.start();
+            
             
             scope.openFile = function(file){
             	hdfsService.openFile(scope.username, password, file.fullpath).then(function (response) {
@@ -251,6 +211,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
                 scope.username = null;
                 var password = null;
                 var startpath = null;
+                $http.defaults.headers.common.Authorization = 'Basic ';
 
             };
 
@@ -260,6 +221,49 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             	 scope.start();
             };
             
+            scope.supportsStorage = function() {
+            	  try {
+            	    return 'localStorage' in window && window['localStorage'] !== null;
+            	  } catch (e) {
+            	    return false;
+            	  }
+            };
+            
+            scope.favoritesPath = [];
+            if(scope.supportsStorage()){
+            	scope.favoritesPath = JSON.parse(localStorage.getItem("favoritesPath"));
+            	if(typeof scope.favoritesPath == 'undefined' || scope.favoritesPath == null)
+            		scope.favoritesPath = [];
+            }
+            
+            console.log("scope.favoritesPath",scope.favoritesPath);
+            
+            scope.addCurrentPathToFavorite = function(){
+            	scope.selectedFolderPath;
+            	if(scope.favoritesPath.indexOf(scope.selectedFolderPath)<0){
+            		scope.favoritesPath.push(scope.selectedFolderPath);
+            		scope.favoritesPath.sort();
+            		localStorage.setItem("favoritesPath", JSON.stringify(scope.favoritesPath));
+            	}
+            };
+            
+            scope.removeFavorite  = function(favoriteToRemove){
+            	var index = scope.favoritesPath.indexOf(favoriteToRemove);
+            	if (index > -1) {
+            		scope.favoritesPath.splice(index, 1);
+            		localStorage.setItem("favoritesPath", JSON.stringify(scope.favoritesPath));
+            	}
+            };
+            
+            
+            scope.copyToClipboard = function(path){
+           	 scope.copyPanel.pathToCopy = path;
+           	 setTimeout(function() {
+           		angular.element(document.querySelector( '#copyToClipboardTextArea'))[0].select();
+         	}, 0);
+           };
+           
+
             scope.selectedFolderPath = "";
             scope.filelist= [];
         }
@@ -271,9 +275,10 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
   $templateCache.put("template/hdfs-explorer.html",
     '<div class="explorer-header-toolbar clearfix" ng-show="started">\n'+ 
     '  <div>\n'+
-    '     <div class="pull-left refresh-panel"> \n'+
+    '     <div class="pull-left toolbar-panel"> \n'+
     '       <a class="" href ng-click="refresh();"><i class="glyphicon glyphicon-refresh"></i> Refresh</a>\n'+
     '       <a class="" href ng-click="browseToHome();"><i class="glyphicon glyphicon-home"></i> Home</a> \n'+
+    '       <a class="" ng-show="supportsStorage()" href ng-click="showFavoritePanel=true"><i class="glyphicon glyphicon-star"></i> Favorites</a> \n'+
     '     </div>\n'+
     '     <div class="pull-right">\n'+
     '       <div>User <strong>{{username}}</strong></div>\n'+
@@ -284,7 +289,6 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     
     
 	'<div class="explorer-start-panel row" ng-show="!started">\n' + 
-    //'  <div class="col-sm-3"><a class="btn btn-primary" href ng-click="start()"><span>Start</span> <i class="glyphicon glyphicon-menu-right" ></i> </a></div>\n' + 
     '  <div class="col-sm-8  explorer-start-intro">\n' + 
     '    Insert user and password, or bind them using \n' + 
     '    <a href="http://zeppelin.apache.org/docs/0.6.1/displaysystem/front-end-angular.html" target="_blank"><code>z.angularBind</code></a> if you are using \n' + 
@@ -320,7 +324,7 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '           <td>{{file.group}}</td>\n'+
     '           <td>{{file.permission}}</td>\n'+
     '           <td>\n'+
-    '              <!-- <a href ng-click="copyPath(file.fullpath)" title="Copy full path: {{file.fullpath}}"><i class="glyphicon glyphicon-copy"></i></a> -->\n'+
+    '               <a href ng-click="copyToClipboard(file.fullpath)" title="Copy full path: {{file.fullpath}}" class="file-action-button"><i class="glyphicon glyphicon-copy"></i></a>\n'+
     '               <a ng-show="file.type!=\'DIRECTORY\'" href ng-click="openFile(file)" title="Open file" class="file-action-button"><i class="glyphicon glyphicon-save"></i></a>\n'+
     '               <a ng-show="file.type!=\'DIRECTORY\'" href ng-click="previewFile(file)" title="Open file" class="file-action-button"><i class="glyphicon glyphicon-eye-open"></i></a>\n'+
     '           </td>\n'+
@@ -336,8 +340,25 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '<div class="panel panel-default modal-panel" ng-show="modalPanelContent!=null">\n'+
     '  <div class="panel-heading">{{modalPanelContent.title}} <span class="close" ng-click="modalPanelContent = null">&times;</span></div>\n'+
     '  <div class="panel-body"><p><span ng-bind-html="modalPanelContent.body"></span></p><div class="text-center"><a href ng-click="modalPanelContent = null" class="btn btn-default">Close</a></div></div>\n'+
-    '</div>\n'
-  );	    		
+    '</div>\n'+
+    '</div>\n'+
+    '<div class="panel panel-default modal-panel" ng-show="copyPanel.pathToCopy!=null">\n'+
+    '  <div class="panel-heading">Copy full path<span class="close" ng-click="copyPanel.pathToCopy = null">&times;</span></div>\n'+
+    '  <div class="panel-body clipboard-copy-panel">\n'+
+    '    <p><textarea id="copyToClipboardTextArea" readonly >{{copyPanel.pathToCopy}}</textarea> </p>\n'+
+    '    <p><strong>Ctrl+C</strong> <small>to copy</small></p>\n'+
+    '    <div class="text-center"><a href ng-click="copyPanel.pathToCopy = null" class="btn btn-default">Close</a></div>\n'+
+    ' </div>\n'+
+    '</div>\n'+
+    '<div class="panel panel-default modal-panel" ng-show="showFavoritePanel">\n'+
+    '  <div class="panel-heading"><i class="glyphicon glyphicon-star"></i> Favorites<span class="close" ng-click="showFavoritePanel=false">&times;</span></div>\n'+
+    '  <div class="panel-body ">\n'+
+    '    <p><ul class="list-group"><li class="list-group-item" ng-repeat="favorite in favoritesPath track by $index">\n'+
+    '        <a href ng-click="browseToPath(favorite)">{{favorite}}</a><a href ng-click="removeFavorite(favorite)" class="pull-right"><i class="glyphicon glyphicon-trash"></i></a>\n'+
+    '    </li></ul></p>\n'+
+    '    <p><a href ng-click="addCurrentPathToFavorite()" class="btn"><i class="glyphicon glyphicon-plus"></i> Add current path to favorite</a></p>\n'+
+    '  <div class="text-center"><a href ng-click="showFavoritePanel = false" class="btn btn-default">Close</a></div></div>\n'+
+    '</div>\n'  );	    		
 
   
   $templateCache.put("template/treefolder-view.html",
