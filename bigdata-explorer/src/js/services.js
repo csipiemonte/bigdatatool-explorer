@@ -24,10 +24,17 @@ bigdataExplorerServices.factory('hdfsService',["$http", "$base64", function($htt
 
 	    
 		var headers = { 
-			   'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
-			   'Authorization' : 'Basic ' + auth,
-			   'Access-Control-Allow-Origin': '*'
-			};			
+			   //'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
+			//'Content-Type' : 'application/octet-stream',
+			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
+			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.116 Safari/537.36',
+			'Accept-Encoding': 'gzip, deflate, sdch, br',
+			'Authorization' : 'Basic ' + auth,
+			'Access-Control-Allow-Origin': '*'
+		};			
+
+		
+		
 
 	    return $http.get(url, {headers: headers});
 	};

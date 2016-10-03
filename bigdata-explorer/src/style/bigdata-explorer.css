@@ -37,6 +37,8 @@
 .file-action-button{font-size: larger; padding-right: .5em;}
 .file-preview-body{overflow: auto; max-height: 350px;}
 
+.level-up-icon{font-size: 18px; padding-right: 16px;}
+
 .icon-xml{color: #aa00ff;}
 .icon-log{color: #6d8764;}
 .icon-txt{color: #647687;}
@@ -44,3 +46,5 @@
 .icon-jar{color: #ff4141;}
 .icon-snappy{color: #ff9900;}
 .icon-sql{color: #19aeff}
+
+.preview-container{ max-height: 400px; overflow: auto;}

@@ -52,7 +52,8 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
 	            		else{
 	            			selectedNode.children[i].icon = "glyphicon glyphicon-file file-icon";
 	            			if(selectedNode.children[i].pathSuffix.lastIndexOf('.')>=0){
-	            				selectedNode.children[i].icon += " icon-" + selectedNode.children[i].pathSuffix.split('.').pop();
+	            				selectedNode.children[i].fileExt = selectedNode.children[i].pathSuffix.split('.').pop();
+	            				selectedNode.children[i].icon += " icon-" + selectedNode.children[i].fileExt;
 	            			}
 	            		}
 	            		scope.filelist.push(selectedNode.children[i]);
@@ -164,6 +165,14 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
 	    	  scope.selectNode(scope.filetree);
 	    	  
           };
+          
+          scope.levelUp = function(path){
+        	  if(path && path!=null){
+        		  path = path.substring(0, path.lastIndexOf("/")); // remove last index
+        		  path = path.substring(0, path.lastIndexOf("/")); // remove last folder
+        		  scope.browseToPath(path);
+        	  }
+          };
 
             
   
@@ -198,8 +207,25 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             scope.previewFile = function(file){
             	hdfsService.openFile(scope.username, password, file.fullpath).then(function (response) {
         	    	console.log("response", response);
-        	    	var body = "<p class='file-preview-body'>"+response.data+"</p>";
-                    scope.modalPanelContent = {"title":"Preview of file file.pathSuffix", "body":body};
+        	    	var body = "";
+        	    	if(file.fileExt && file.fileExt == "csv"){
+        	    		body = "<div class='preview-container'><table class='table table-condensed table-bordered table-preview'><tbody>";
+        	    		var csvLines = response.data.match(/[^\r\n]+/g);
+        	    		for(var i=0; i<csvLines.length;i++){
+        	    			body += "<tr>";
+        	    			var cols = csvLines[i].split(",");
+        	    			for(var j=0; j<cols.length; j++)
+        	    				body += "<td>" + cols[j] + "</td>";
+        	    			body += "</tr>";
+        	    		}
+        	    		body += "</tbody></table></div>";
+        	    	}
+        	    	else if(file.fileExt && file.fileExt == "csv"){
+        	    		body = "<p class='file-preview-body'><img src='data:image/png;base64,"+response.data+"'></img></p><p>"+file.pathSuffix+"</p>";
+        	    	}
+        	    	else
+        	    		body = "<p class='file-preview-body'>"+response.data+"</p>";
+                    scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":body};
         	    }, function(response){
         	    	console.error("response error", response);
                 	scope.message = {type:"danger",title:"Unable to create the file preview",text:"<strong>" + response.status + "</strong> " + response.statusText};
@@ -297,7 +323,7 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '</div>\n'+
     '<div class="row explorer-wrapper" ng-show="started">\n' + 
     '  <div class="col-sm-8 col-sm-offset-4">\n'+
-    '    <p><strong translate>Full path</strong> <code>{{selectedFolderPath}}</code></p>\n' + 
+    '    <p><a href ng-click="levelUp(selectedFolderPath)"><i class="glyphicon glyphicon-level-up level-up-icon" ng-show="selectedFolderPath!=\'/\'"></i></a> <strong translate>Full path</strong> <code>{{selectedFolderPath}}</code></p>\n' + 
     '  </div>\n'+
     '  <div class="col-sm-4 folder-tree-panel" id="folder-tree-panel">\n'+
     '     <a href ng-click="start()"  ng-class="filetree.fullpath == selectedFolderPath?\'folder-selected\':\'\'">\n'+
@@ -339,7 +365,7 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '</div>\n'+
     '<div class="panel panel-default modal-panel" ng-show="modalPanelContent!=null">\n'+
     '  <div class="panel-heading">{{modalPanelContent.title}} <span class="close" ng-click="modalPanelContent = null">&times;</span></div>\n'+
-    '  <div class="panel-body"><p><span ng-bind-html="modalPanelContent.body"></span></p><div class="text-center"><a href ng-click="modalPanelContent = null" class="btn btn-default">Close</a></div></div>\n'+
+    '  <div class="panel-body"><div ng-bind-html="modalPanelContent.body"></div><div class="text-center"><a href ng-click="modalPanelContent = null" class="btn btn-default">Close</a></div></div>\n'+
     '</div>\n'+
     '</div>\n'+
     '<div class="panel panel-default modal-panel" ng-show="copyPanel.pathToCopy!=null">\n'+
