@@ -2,8 +2,7 @@ var translations_en = {
 
 	LANG_KEY: 'en',
 
-	insert_credential_intro:'Enter HFDFS credentials ',
-	user_password_required: 'User and password are required'
+	hdfs_intro:'Enter a path to start navigating in HDFS (optional, if omitted it starts from the root)',
 
 
 };

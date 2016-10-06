@@ -11,17 +11,10 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             console.debug("hdfsService",hdfsService.getInfo());
             
             scope.started = false;
-            scope.username = attr.username;
-            var password = attr.password;
             var startpath = attr.startpath;
             scope.pathToBrowse = [];
             scope.copyPanel = {pathToCopy: null};
-            
-//            scope.$watch("username",function(newValue,oldValue) {
-//                console.log("changed",newValue,oldValue);
-//            });
-            
-            
+                        
             var rootFolder = {"fullpath": startpath, "pathSuffix": ""};
             console.log("rootFolder",rootFolder);
             
@@ -93,7 +86,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             	console.debug("fromPath", fromNode.fullpath);
             	console.log("qui");
             	if(fromNode.children.length==0){
-	            	hdfsService.getPath(scope.username, password, fromNode.fullpath).then(function (response) {
+	            	hdfsService.getPath(fromNode.fullpath).then(function (response) {
 	        	    	console.log("response", response.data.FileStatuses.FileStatus);
 	        	    	scope.list =  response.data.FileStatuses.FileStatus;
 	        	    	for (var i = 0; i < response.data.FileStatuses.FileStatus.length; i++) {
@@ -143,7 +136,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             };
             
           scope.browseToHome = function(){
-        	hdfsService.getHomeDirectory(scope.username, password).then(function (response) {
+        	hdfsService.getHomeDirectory().then(function (response) {
     	    	console.log("response", response);
     	    	if(response!=null && response.data !=null && response.data.Path !=null){
     	    		scope.pathToBrowse = response.data.Path.split("/");
@@ -177,65 +170,91 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             
   
             scope.start = function(){
-            	if(scope.username!=null && scope.username!=""){
-            		scope.selectNode(scope.filetree);
-            		//browseToHome();
-            		scope.started=true;
-            	}
-            	else
-            		scope.started=false;
+            	scope.selectNode(scope.filetree);
+            	scope.started=true;
             };
             
             scope.start();
             
             
             scope.openFile = function(file){
-            	hdfsService.openFile(scope.username, password, file.fullpath).then(function (response) {
-        	    	console.log("response", response);
-        	    	var blob = new Blob([response.data]);			
-        			var downloadLink = angular.element('<a></a>');
-                    downloadLink.attr('href',window.URL.createObjectURL(blob));
+    	    	if(file.fileExt && (file.fileExt == "jpg" || file.fileExt == "tiff" || file.fileExt == "gif" || file.fileExt == "bmp" || file.fileExt == "png" || file.fileExt == "jpeg" || 
+    	    		file.fileExt == "ogg" || file.fileExt == "mp4" || file.fileExt == "webm" || file.fileExt == "mp3" || file.fileExt == "aac")){
+
+    	    		var downloadLink = angular.element('<a></a>');
+                    downloadLink.attr('href',Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN");
                     downloadLink.attr('download', file.pathSuffix);
         			downloadLink[0].click();
-        			
-        	    }, function(response){
-        	    	console.error("response error", response);
-                	scope.message = {type:"danger",title:"Unable to download the file",text:"<strong>" + response.status + "</strong> " + response.statusText};
-        	    });
+    	    	}
+    	    	else{
+	            	hdfsService.openFile(file.fullpath).then(function (response) {
+	        	    	console.log("response", response);
+	        	    	var blob = new Blob([response.data]);			
+	        			var downloadLink = angular.element('<a></a>');
+	                    downloadLink.attr('href',window.URL.createObjectURL(blob));
+	                    downloadLink.attr('download', file.pathSuffix);
+	        			downloadLink[0].click();
+	        			
+	        	    }, function(response){
+	        	    	console.error("response error", response);
+	                	scope.message = {type:"danger",title:"Unable to download the file",text:"<strong>" + response.status + "</strong> " + response.statusText};
+	        	    });
+    	    	}
+            };
+            
+            scope.imgFit = function(orientation){
+            	if(orientation=='width'){
+            		scope.imageFitWidth = '100%';
+            		scope.imageFitHeight = 'auto';
+            	}
+            	else{
+            		scope.imageFitWidth = 'auto';
+            		scope.imageFitHeight = '300px';
+            	}
             };
 
             scope.previewFile = function(file){
-            	hdfsService.openFile(scope.username, password, file.fullpath).then(function (response) {
-        	    	console.log("response", response);
-        	    	var body = "";
-        	    	if(file.fileExt && file.fileExt == "csv"){
-        	    		body = "<div class='preview-container'><table class='table table-condensed table-bordered table-preview'><tbody>";
-        	    		var csvLines = response.data.match(/[^\r\n]+/g);
-        	    		for(var i=0; i<csvLines.length;i++){
-        	    			body += "<tr>";
-        	    			var cols = csvLines[i].split(",");
-        	    			for(var j=0; j<cols.length; j++)
-        	    				body += "<td>" + cols[j] + "</td>";
-        	    			body += "</tr>";
-        	    		}
-        	    		body += "</tbody></table></div>";
-        	    	}
-        	    	else if(file.fileExt && file.fileExt == "csv"){
-        	    		body = "<p class='file-preview-body'><img src='data:image/png;base64,"+response.data+"'></img></p><p>"+file.pathSuffix+"</p>";
-        	    	}
-        	    	else
-        	    		body = "<p class='file-preview-body'>"+response.data+"</p>";
+            	scope.imgPreviewUrl = null;
+    	    	if(file.fileExt && (file.fileExt == "jpg" || file.fileExt == "tiff" || file.fileExt == "gif" || file.fileExt == "bmp" || file.fileExt == "png" || file.fileExt == "jpeg")){
+    	    		scope.imgPreviewUrl =  Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN" ;
+                    scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":""};
+    	    	}
+    	    	else if(file.fileExt && (file.fileExt == "ogg" || file.fileExt == "mp4" || file.fileExt == "webm")){
+    	    		var body = "<p class='file-preview-body'><video width='320' height='240' controls><source src='"+ Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN'></source></video></p><p><strong>File name:</strong> "+file.pathSuffix+"</p>";
                     scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":body};
-        	    }, function(response){
-        	    	console.error("response error", response);
-                	scope.message = {type:"danger",title:"Unable to create the file preview",text:"<strong>" + response.status + "</strong> " + response.statusText};
-        	    });
+    	    	}
+    	    	else if(file.fileExt && (file.fileExt == "mp3" || file.fileExt == "aac")){
+    	    		var body = "<p class='file-preview-body'><audio width='320' height='240' controls><source src='"+ Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN'></source></audio></p><p><strong>File name:</strong> "+file.pathSuffix+"</p>";
+                    scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":body};
+    	    	}
+    	    	else{ 
+	            	hdfsService.openFile(file.fullpath).then(function (response) {
+	        	    	console.log("response", response);
+	        	    	var body = "";
+	        	    	if(file.fileExt && file.fileExt == "csv"){
+	        	    		body = "<div class='preview-container'><table class='table table-condensed table-bordered table-preview'><tbody>";
+	        	    		var csvLines = response.data.match(/[^\r\n]+/g);
+	        	    		for(var i=0; i<csvLines.length;i++){
+	        	    			body += "<tr>";
+	        	    			var cols = csvLines[i].split(",");
+	        	    			for(var j=0; j<cols.length; j++)
+	        	    				body += "<td>" + cols[j] + "</td>";
+	        	    			body += "</tr>";
+	        	    		}
+	        	    		body += "</tbody></table></div>";
+	        	    	}
+	        	    	else
+	        	    		body = "<p class='file-preview-body'>"+response.data+"</p>";
+	                    scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":body};
+	        	    }, function(response){
+	        	    	console.error("response error", response);
+	                	scope.message = {type:"danger",title:"Unable to create the file preview",text:"<strong>" + response.status + "</strong> " + response.statusText};
+	        	    });
+    	    	}
             };
             
             scope.logout = function(){
                 scope.started = false;
-                scope.username = null;
-                var password = null;
                 var startpath = null;
                 $http.defaults.headers.common.Authorization = 'Basic ';
 
@@ -303,12 +322,12 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '  <div>\n'+
     '     <div class="pull-left toolbar-panel"> \n'+
     '       <a class="" href ng-click="refresh();"><i class="glyphicon glyphicon-refresh"></i> Refresh</a>\n'+
-    '       <a class="" href ng-click="browseToHome();"><i class="glyphicon glyphicon-home"></i> Home</a> \n'+
+   // '       <a class="" href ng-click="browseToHome();"><i class="glyphicon glyphicon-home"></i> Home</a> \n'+
     '       <a class="" ng-show="supportsStorage()" href ng-click="showFavoritePanel=true"><i class="glyphicon glyphicon-star"></i> Favorites</a> \n'+
     '     </div>\n'+
     '     <div class="pull-right">\n'+
-    '       <div>User <strong>{{username}}</strong></div>\n'+
-    '       <div><a class="" href ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i> Logout</a></div>\n'+ 
+    //'       <div>User <strong>{{username}}</strong></div>\n'+
+    //'       <div><a class="" href ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i> Logout</a></div>\n'+ 
     '     </div>\n' +
     '  </div>\n' +
     '</div>' +
@@ -365,7 +384,14 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '</div>\n'+
     '<div class="panel panel-default modal-panel" ng-show="modalPanelContent!=null">\n'+
     '  <div class="panel-heading">{{modalPanelContent.title}} <span class="close" ng-click="modalPanelContent = null">&times;</span></div>\n'+
-    '  <div class="panel-body"><div ng-bind-html="modalPanelContent.body"></div><div class="text-center"><a href ng-click="modalPanelContent = null" class="btn btn-default">Close</a></div></div>\n'+
+    '  <div class="panel-body">\n'+
+    '    <p ng-show="imgPreviewUrl!=null"><strong>Fit image </strong> \n' +
+    '       <a class="btn btn-default" href ng-click="imgFit(\'width\')"><i class="glyphicon glyphicon-resize-horizontal" alt="width"></i></a> \n' +
+    '       <a  class="btn btn-default" href ng-click="imgFit(\'height\')" alt="height"><i class="glyphicon glyphicon-resize-vertical"></i></a> \n' + 
+    '    </p>' + 
+    '    <p class="file-preview-body" ng-show="imgPreviewUrl!=null"><img src="{{imgPreviewUrl}}"  width="{{imageFitWidth}}" height="{{imageFitHeight}}"></img></p>\n' +
+    '    <div ng-bind-html="modalPanelContent.body"></div><div class="text-center"><a href ng-click="modalPanelContent = null" class="btn btn-default">Close</a></div>\n'+
+    '  </div>\n'+
     '</div>\n'+
     '</div>\n'+
     '<div class="panel panel-default modal-panel" ng-show="copyPanel.pathToCopy!=null">\n'+

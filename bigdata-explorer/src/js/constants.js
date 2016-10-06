@@ -1,7 +1,9 @@
 var Constants = Constants || {};
 
 
-Constants.KNOX_BASE_URL = "https://sdnet-knox.sdp.csi.it:8443/gateway/default/webhdfs/v1";
+//Constants.KNOX_BASE_URL = "https://sdnet-knox.sdp.csi.it:8443/gateway/default/webhdfs/v1";
+Constants.KNOX_BASE_URL = "knox/gateway/default/webhdfs/v1";
+//Constants.KNOX_BASE_URL = "https://sdnet-webedge.sdp.csi.it/bigdata-explorer/knox/gateway/default/webhdfs/v1";
 
 Constants.KNOX_OPERATIONS = {"LIST":"LISTSTATUS", "OPEN": "OPEN", "GETHOMEDIRECTORY": "GETHOMEDIRECTORY"};
 

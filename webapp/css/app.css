@@ -29,3 +29,13 @@ body{font-family: 'Hind Siliguri', sans-serif;}
 .form-inline .form-group{padding-left: 1em;}
 
 input.ng-dirty.ng-invalid, input.ng-submitted.ng-invalid{border-color: red;}
+
+.tab-bar{margin-top: 24px;}
+.tab-item{font-size: 24px;}
+.tab-item.active{color:#3071a9; }
+.tab-panel{padding-top: 24px;}
+
+.coming-soon-panel{color: #fff; text-align: center; font-size: 48px;  font-family:sans-serif; border-radius: 100%; padding: 50px 0; border: #fff dashed 4px; 
+-webkit-transform: rotate(-15deg); -moz-transform: rotate(-15deg);-ms-transform: rotate(-15deg);-o-transform: rotate(-15deg);
+}
+.coming-soon-container{border-radius: 100%; padding: 9px;background-color: #C2027B;margin: 48px auto; width: 262px; height: 262px;box-shadow: 16px 16px 20px rgba(0, 0, 0, .5); }
