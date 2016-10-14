@@ -12,6 +12,7 @@ appControllers.controller('GlobalCtrl', [ '$scope', '$translate', function($scop
 	
 	
 	$scope.hdfsExplorerDirectiveUrl ='partials/directives/hdfs-explorer.html?t='+new Date().getTime();
+	$scope.hiveExplorerDirectiveUrl ='partials/directives/hive-explorer.html?t='+new Date().getTime();
 	
 	$scope.message = null;
 			

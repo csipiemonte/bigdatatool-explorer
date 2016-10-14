@@ -178,6 +178,12 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             
             
             scope.openFile = function(file){
+            	console.log("openFile", file);
+//            	var downloadLink = angular.element('<a></a>');
+//                downloadLink.attr('href',Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN");
+//                downloadLink.attr('download', file.pathSuffix);
+//    			downloadLink[0].click();
+//            	console.log("openFile", Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN");
     	    	if(file.fileExt && (file.fileExt == "jpg" || file.fileExt == "tiff" || file.fileExt == "gif" || file.fileExt == "bmp" || file.fileExt == "png" || file.fileExt == "jpeg" || 
     	    		file.fileExt == "ogg" || file.fileExt == "mp4" || file.fileExt == "webm" || file.fileExt == "mp3" || file.fileExt == "aac")){
 
@@ -228,7 +234,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
                     scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":body};
     	    	}
     	    	else{ 
-	            	hdfsService.openFile(file.fullpath).then(function (response) {
+	            	hdfsService.previewFile(file.fullpath).then(function (response) {
 	        	    	console.log("response", response);
 	        	    	var body = "";
 	        	    	if(file.fileExt && file.fileExt == "csv"){
@@ -254,9 +260,14 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             };
             
             scope.logout = function(){
-                scope.started = false;
-                var startpath = null;
-                $http.defaults.headers.common.Authorization = 'Basic ';
+            	
+            	hdfsService.logout().then(function (response) {
+            		scope.started = false;
+            		var startpath = null;
+            	 }, function(response){
+	        	    	console.error("response error", response);
+	                	scope.message = {type:"danger",title:"Logout failed",text:"Unable to logout <strong>" + response.status + "</strong> " + response.statusText +"</br><p>Close the browser</p>"};
+	        	 });
 
             };
 
@@ -327,7 +338,7 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '     </div>\n'+
     '     <div class="pull-right">\n'+
     //'       <div>User <strong>{{username}}</strong></div>\n'+
-    //'       <div><a class="" href ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i> Logout</a></div>\n'+ 
+    '       <div><a class="" href ng-click="logout()"><i class="glyphicon glyphicon-log-out"></i> Logout</a></div>\n'+ 
     '     </div>\n' +
     '  </div>\n' +
     '</div>' +
