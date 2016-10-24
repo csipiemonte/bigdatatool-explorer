@@ -188,7 +188,7 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
     	    		file.fileExt == "ogg" || file.fileExt == "mp4" || file.fileExt == "webm" || file.fileExt == "mp3" || file.fileExt == "aac")){
 
     	    		var downloadLink = angular.element('<a></a>');
-                    downloadLink.attr('href',Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN");
+                    downloadLink.attr('href',Constants.HDFS_BASE_URL+ file.fullpath + "?op=OPEN");
                     downloadLink.attr('download', file.pathSuffix);
         			downloadLink[0].click();
     	    	}
@@ -222,15 +222,15 @@ bigdataExplorerModule.directive('hdfsExplorer', ['hdfsService', '$bigdataExplore
             scope.previewFile = function(file){
             	scope.imgPreviewUrl = null;
     	    	if(file.fileExt && (file.fileExt == "jpg" || file.fileExt == "tiff" || file.fileExt == "gif" || file.fileExt == "bmp" || file.fileExt == "png" || file.fileExt == "jpeg")){
-    	    		scope.imgPreviewUrl =  Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN" ;
+    	    		scope.imgPreviewUrl =  Constants.HDFS_BASE_URL+ file.fullpath + "?op=OPEN" ;
                     scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":""};
     	    	}
     	    	else if(file.fileExt && (file.fileExt == "ogg" || file.fileExt == "mp4" || file.fileExt == "webm")){
-    	    		var body = "<p class='file-preview-body'><video width='320' height='240' controls><source src='"+ Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN'></source></video></p><p><strong>File name:</strong> "+file.pathSuffix+"</p>";
+    	    		var body = "<p class='file-preview-body'><video width='320' height='240' controls><source src='"+ Constants.HDFS_BASE_URL+ file.fullpath + "?op=OPEN'></source></video></p><p><strong>File name:</strong> "+file.pathSuffix+"</p>";
                     scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":body};
     	    	}
     	    	else if(file.fileExt && (file.fileExt == "mp3" || file.fileExt == "aac")){
-    	    		var body = "<p class='file-preview-body'><audio width='320' height='240' controls><source src='"+ Constants.KNOX_BASE_URL+ file.fullpath + "?op=OPEN'></source></audio></p><p><strong>File name:</strong> "+file.pathSuffix+"</p>";
+    	    		var body = "<p class='file-preview-body'><audio width='320' height='240' controls><source src='"+ Constants.HDFS_BASE_URL+ file.fullpath + "?op=OPEN'></source></audio></p><p><strong>File name:</strong> "+file.pathSuffix+"</p>";
                     scope.modalPanelContent = {"title":"Preview of file " + file.pathSuffix, "body":body};
     	    	}
     	    	else{ 

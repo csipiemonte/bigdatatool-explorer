@@ -21,7 +21,7 @@ body{font-family: 'Hind Siliguri', sans-serif;}
 #main-footer ul li + li::before  { content: ""; padding: 0; }
 #main-footer ul li a{text-decoration: none;color: #fff;}
 #main-footer ul li a:hover {text-decoration: underline;}
-#main-footer .logo-csi { background-attachment: scroll; background-clip: border-box; background-color: transparent; background-image: url(/images/logo_csipiemonte_footer.png);
+#main-footer .logo-csi { background-attachment: scroll; background-clip: border-box; background-color: transparent; background-image: url(../images/logo_csipiemonte_footer.png);
  background-origin: padding-box; background-position: center center; background-repeat: no-repeat; background-size: auto auto;display: inline-block; height: 51px; width: 164px;}
  
  .main-container{padding-top: 80px; min-height: 450px;}

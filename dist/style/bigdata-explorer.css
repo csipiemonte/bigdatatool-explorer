@@ -48,3 +48,50 @@
 .icon-sql{color: #19aeff}
 
 .preview-container{ max-height: 400px; overflow: auto;}
+
+h2 .icon {width: 48px; height: 48px; vertical-align: -11px; margin-right: 18px; background-size: 48px 48px;}
+
+/* hive */
+.hive-tree-panel{overflow: auto; max-height: 400px; border-right: solid 1px #bbb;}
+.hive-tree-list{list-style-type: none; padding-left:10px;}
+.hive-tree-list a{color: #2d2d2d; white-space: nowrap;}
+.hive-tree-item-selected{font-weight: bold}
+
+
+.hive-preview-table{max-height: 300px; overflow: auto; overflow: auto; border: solid 1px #ddd;}
+.hive-preview-table .row-num{background-color:#eee;width: 1px; text-align: center;}
+.hive-preview-table th {background-color: #eee;}
+
+.hive-breadcumb-item{padding-right: 2em;border-right: solid 1px #ccc; margin-right: 2em;}
+.hive-query-preview-tab p{padding: 1em 0;}
+
+.hive-system-info-table>tbody>tr>td{vertical-align: middle;}
+.hive-system-info-table .icon{display: inline-block;height: 73px; width: 280px;}
+
+.hive-job-status-RUNNING{font-weight: bold; color: #d8c100;}
+.hive-job-status-LAUNCHED{font-weight: bold; color: #1ba1e2;}
+.hive-job-status-PREP{font-weight: bold; color: #f0a30a;}
+.hive-job-status-SUCCEEDED{font-weight: bold; color: #60a917;}
+.hive-job-status-FAILED{font-weight: bold; color: #e51400;}
+
+.panel-scroll{max-height: 300px; overflow: auto;}
+
+.icon{display: inline-block; width: 24px; height: 24px; margin-right: 6px; }
+
+.icon-hadoop{background: url('../img/icons/hadoop-icon.png') left center no-repeat;  }
+.icon-hive{background: url('../img/icons/hive-icon.png') center left no-repeat;  }
+.icon-webhcat{background: url('../img/icons/webhcat-icon.png') left center no-repeat;  }
+
+.icon-root{color: #9eabb0}
+.icon-database{background: url('../img/icons/database-icon.svg') center center no-repeat;}
+.icon-table{background: url('../img/icons/table-icon.svg') center center no-repeat;}
+
+/* ajax loader */
+.spinner {margin: 12px;  text-align: left;}
+.spinner > div {  width: 14px;  height: 14px;  background-color: #333;  border-radius: 100%;  display: inline-block;  -webkit-animation: sk-bouncedelay 1.4s infinite ease-in-out both;  animation: sk-bouncedelay 1.4s infinite ease-in-out both;}
+.spinner .bounce1 {  -webkit-animation-delay: -0.32s;  animation-delay: -0.32s;}
+.spinner .bounce2 {  -webkit-animation-delay: -0.16s;  animation-delay: -0.16s;}
+@-webkit-keyframes sk-bouncedelay {  0%, 80%, 100% { -webkit-transform: scale(0) }  40% { -webkit-transform: scale(1.0) }}
+@keyframes sk-bouncedelay {  0%, 80%, 100% {    -webkit-transform: scale(0);    transform: scale(0);  } 40% {    -webkit-transform: scale(1.0);    transform: scale(1.0);  }}
+
+.spinner-label{display: inline-block; margin-left: 1em;}

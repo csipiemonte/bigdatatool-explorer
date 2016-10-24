@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.1"
+   x="0px"
+   y="0px"
+   viewBox="0 0 100 125"
+   style="enable-background:new 0 0 100 100;"
+   xml:space="preserve"
+   id="svg2"
+   inkscape:version="0.48.4 r9939"
+   width="100%"
+   height="100%"
+   sodipodi:docname="table-icon.svg"><metadata
+     id="metadata14"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /></cc:Work></rdf:RDF></metadata><defs
+     id="defs12" /><sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1600"
+     inkscape:window-height="838"
+     id="namedview10"
+     showgrid="false"
+     inkscape:zoom="1.888"
+     inkscape:cx="50"
+     inkscape:cy="62.5"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" /><style
+     type="text/css"
+     id="style4">
+	.st0{fill:#60a917;}
+</style><g
+     id="g6"
+     transform="matrix(1.1682453,0,0,1.1682453,-8.1474327,5.6237537)"><path
+       class="st0"
+       d="m 7.5,85 c 0,4.1 3.4,7.5 7.5,7.5 h 70 c 4.1,0 7.5,-3.4 7.5,-7.5 V 15 C 92.5,10.9 89.1,7.5 85,7.5 H 15 C 10.9,7.5 7.5,10.9 7.5,15 V 85 z M 65,15 H 85 V 35 H 65 V 15 z m 0,25 H 85 V 60 H 65 V 40 z m 0,25 H 85 V 85 H 65 V 65 z M 40,15 H 60 V 35 H 40 V 15 z m 0,25 H 60 V 60 H 40 V 40 z m 0,25 H 60 V 85 H 40 V 65 z M 15,15 H 35 V 35 H 15 V 15 z m 0,25 H 35 V 60 H 15 V 40 z m 0,25 H 35 V 85 H 15 V 65 z"
+       id="path8"
+       inkscape:connector-curvature="0"
+       style="fill:#60a917" /></g></svg>

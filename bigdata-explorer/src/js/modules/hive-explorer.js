@@ -503,10 +503,10 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
 	'         <div class="spinner" ng-show="selectedNode.detail.isLoadingColumns">Loading columns&hellip; &nbsp;&nbsp;<div class="bounce1"></div><div class="bounce2"></div><div class="bounce3"></div></div>    \n' +
     '    	  <table class="table" ng-show="selectedNode.detail.columns.length>0">\n'+
     '           <thead>\n'+
-    '             <tr><th>Name</th><th>Type</th></tr>\n'+
+    '             <tr><th class="text-muted">#</th><th>Name</th><th>Type</th></tr>\n'+
     '           </thead>\n'+
     '           <tbody>\n'+
-    '             <tr ng-repeat="col in selectedNode.detail.columns track by $index"><td><strong>{{col.name}}</strong></td><td>{{col.type}}</td></tr>\n'+
+    '             <tr ng-repeat="col in selectedNode.detail.columns track by $index"><td class="text-muted">{{$index+1}}</td><td><strong>{{col.name}}</strong></td><td>{{col.type}}</td></tr>\n'+
     '           </tbody>\n'+
     '         </table>\n'+
     '       </div>\n'+
@@ -517,11 +517,12 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '    	  <table class="table" ng-show="!selectedNode.detail.isLoadingProperties">\n'+
     '           <tbody>\n'+
     '             <tr><td><strong>numFiles</strong></td><td>{{selectedNode.detail.properties.numFiles}}</td></tr>\n'+
-    '             <tr><td><strong>transient_lastDdlTime</strong></td><td>{{selectedNode.detail.properties.transient_lastDdlTime|date}}</td></tr>\n'+
+    '             <tr><td><strong>transient_lastDdlTime</strong></td><td>{{selectedNode.detail.properties.transient_lastDdlTime*1000|date:"dd/MM/yyyy H:mm:ss"}}</td></tr>\n'+
     '             <tr><td><strong>COLUMN_STATS_ACCURATE</strong></td><td>{{selectedNode.detail.properties.COLUMN_STATS_ACCURATE}}</td></tr>\n'+
     '             <tr><td><strong>EXTERNAL</strong></td><td>{{selectedNode.detail.properties.EXTERNAL}}</td></tr>\n'+
     '             <tr><td><strong>totalSize</strong></td><td>{{selectedNode.detail.properties.totalSize|format_filesize}}</td></tr>\n'+
     '             <tr><td><strong>numRows</strong></td><td>{{selectedNode.detail.properties.numRows}}</td></tr>\n'+
+    '             <tr><td><strong>numCols</strong></td><td><span ng-show="selectedNode.detail.columns.length>0">{{selectedNode.detail.columns.length}}</span></td></tr>\n'+
     '             <tr><td><strong>rawDataSize</strong></td><td>{{selectedNode.detail.properties.rawDataSize|format_filesize}}</td></tr>\n'+
     '             <tr><td><strong>partitions</strong></td><td>{{selectedNode.detail.properties.partitions}}</td></tr>\n'+
     '           </tbody>\n'+
@@ -532,7 +533,7 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '	      <form class="form-horizontal" ng-show="selectedNode.detail.preview.jobStatus==null" ng-submit="runPreviewQuery()">\n'+
     '	        <div class="form-group">\n'+
     '	          <label for="previewQueryInput" class="col-sm-2 control-label">Query</label>\n'+
-    '	          <div class="col-sm-8"><input type="text" class="form-control" id="previewQueryInput" placeholder="e.g select * from database.table" ng-model="selectedNode.detail.preview.query"></div>\n'+
+    '	          <div class="col-sm-8"><input readonly type="text" class="form-control" id="previewQueryInput" placeholder="e.g select * from database.table" ng-model="selectedNode.detail.preview.query"></div>\n'+
     '	          <div class="col-sm-2"><button type="submit" class="btn btn-default" >Run query</button></div>\n'+
     '	        </div>\n'+
     '	      </form>\n'+
@@ -556,7 +557,7 @@ bigdataExplorerTemplatesModule.run(["$templateCache", function($templateCache) {
     '               <div ng-show="selectedNode.detail.preview.previewData.length>0" class="hive-preview-table">'+
     '                 <table class="table table-condensed table-bordered table-preview">'+
     '					<thead><tr><th>&nbsp;</th><th ng-repeat="cell in selectedNode.detail.preview.previewDataHeader track by $index">{{cell}}</th></tr></thead>'+
-    '					<tbody><tr ng-repeat="row in selectedNode.detail.preview.previewData track by $index"><td class="row-num">{{$index}}</td><td ng-repeat="cell in row track by $index">{{cell}}</td></tr></tbody>'+
+    '					<tbody><tr ng-repeat="row in selectedNode.detail.preview.previewData track by $index"><td class="row-num">{{$index+1}}</td><td ng-repeat="cell in row track by $index" title="{{cell}}">{{cell|string_ellipse:40}}</td></tr></tbody>'+
     '                 </table>'+
     '               </div>\n' +
     '             </div>' +
